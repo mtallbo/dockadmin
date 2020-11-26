@@ -28,6 +28,10 @@ namespace dockadmin
         {
             return CurrentSlots;
         }
+        public void RemoveBoatFromSlot(int slot)
+        {
+            CurrentSlots[slot] = null;
+        }
         private void AddBoatToSlot(Boat boat, int startSlotIndex)
         {
             for (int i = 0; i < boat.BoatSize; i++)

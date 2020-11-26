@@ -44,6 +44,7 @@ namespace dockadmin
             }
         }
 
+
         public List<Boat> ClearDeparturingBoats()
         {
             var dockedBoats = Dock.GetAllBoatsInDock();
@@ -58,7 +59,7 @@ namespace dockadmin
                 {
                     Console.WriteLine($"Removing boat..{dockedBoats[i].BoatId}");
                     departuringBoats.Add(dockedBoats[i]);
-                    dockedBoats[i] = null;
+                    Dock.RemoveBoatFromSlot(i);
                 }
             }
             return departuringBoats;
