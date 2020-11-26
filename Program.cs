@@ -24,15 +24,11 @@ namespace dockadmin
                 }
                 DockAdmin.ShowCurrenteDockStatus();
                 DockAdmin.DecrementDaysToStayOnDockedBoats();
+                daysToSimulate--;
                 Console.ReadKey();
                 Console.Clear();
             }
-
-            //while (daysToSimulate > 0)
-            //{
-
-
-            //}
+            Console.WriteLine("Simulation done");
         }
     }
 }
