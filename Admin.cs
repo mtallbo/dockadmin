@@ -57,7 +57,6 @@ namespace dockadmin
                 }
                 if(dockedBoats[i].DaysToStay == 0)
                 {
-                    Console.WriteLine($"Removing boat..{dockedBoats[i].BoatId}");
                     departuringBoats.Add(dockedBoats[i]);
                     Dock.RemoveBoatFromSlot(i);
                 }
