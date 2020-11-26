@@ -1,38 +1,82 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace dockadmin
 {
     public class Admin
     {
-        IDock _dock;
+        private readonly Dock Dock;
+        List<Boat> RejectedBoats = new List<Boat>();
 
-        public Admin(IDock dock)
+        public Admin(Dock dock)
         {
-            _dock = dock;
+            Dock = dock;
         }
         public void ShowCurrenteDockStatus()
         {
-            _dock.ShowCurrentDockStatus();
+            var dockedBoats = Dock.GetAllBoatsInDock();
+            var emptySlots = 0;
+            for (int i = 0; i < dockedBoats.Length; i++)
+            {
+                if (dockedBoats[i] == null)
+                {
+                    emptySlots++;
+                    Console.WriteLine($"Slot{i}: empty");
+                }
+                else
+                {
+                    Console.WriteLine($"Slot{i}: {dockedBoats[i].BoatId}, Days left: {dockedBoats[i].DaysToStay}");
+                }
+            }
+            Console.WriteLine($"Amount of rejected boats: {RejectedBoats.Count}");
+            Console.WriteLine($"Amount of empty slots: {emptySlots}");
         }
 
-        public void FindEmptySlotAndAddBoat(Boat boat)
+        public void AddBoat(Boat boat)
         {
-            
-            var emptySlot = _dock.FindEmptySlot();
-            if(emptySlot != null)
+            //If a boat is rejected it will be returned below
+            var rejectedBoat = Dock.FindEmptySlotAndAddBoat(boat);
+            if (rejectedBoat != null)
             {
-                _dock.AddBoatToSlot(boat, (int)emptySlot);
+                RejectedBoats.Add(rejectedBoat);
             }
-            //var boatWasAddded = _dock.AddBoatToSlot(boat, slotIndex);
-            //if (boatWasAddded)
-            //{
-            //    return true;
-            //} else
-            //{
-            //    return false;
-            //}
+        }
+
+        public List<Boat> ClearDeparturingBoats()
+        {
+            var dockedBoats = Dock.GetAllBoatsInDock();
+            List<Boat> departuringBoats = new List<Boat>();
+            for (int i = 0; i < dockedBoats.Length; i++)
+            {
+                if (dockedBoats[i] == null)
+                {
+                    continue;
+                }
+                if(dockedBoats[i].DaysToStay == 0)
+                {
+                    Console.WriteLine($"Removing boat..{dockedBoats[i].BoatId}");
+                    departuringBoats.Add(dockedBoats[i]);
+                    dockedBoats[i] = null;
+                }
+            }
+            return departuringBoats;
+        }
+
+        public void DecrementDaysToStayOnDockedBoats()
+        {
+            var dock = Dock.GetAllBoatsInDock();
+            var dockedBoats = dock.Distinct().ToList();
+
+            foreach (var dockedBoat in dockedBoats)
+            {
+                if(dockedBoat == null)
+                {
+                    continue;
+                }
+                dockedBoat.DaysToStay--;
+            }
         }
     }
 }

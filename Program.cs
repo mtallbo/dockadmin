@@ -11,24 +11,23 @@ namespace dockadmin
             Utility utility = new Utility();
             
             int daysToSimulate = 30;
-            
-            
-            
-            var rndBoat= utility.GenerateRandomBoat();
-            var freightBoat1 = utility.CreateFreightBoat();
-            var freightBoat2 = utility.CreateFreightBoat();
 
-            var freightBoat3 = utility.CreateFreightBoat();
+            while(daysToSimulate > 0)
+            {
+                DockAdmin.ClearDeparturingBoats();
+                Console.WriteLine("DAY: " + daysToSimulate);
+                var rndBoat = utility.GenerateRandomBoat(5);
+                
+                foreach (var boat in rndBoat)
+                {
+                    DockAdmin.AddBoat(boat);
+                }
+                DockAdmin.ShowCurrenteDockStatus();
+                DockAdmin.DecrementDaysToStayOnDockedBoats();
+                Console.ReadKey();
+                Console.Clear();
+            }
 
-            var speedBoat1 = utility.CreateSpeedBoat();
-            //DockAdmin.AddBoatToDock(boat1, 0);
-            DockAdmin.FindEmptySlotAndAddBoat(freightBoat1);
-            DockAdmin.FindEmptySlotAndAddBoat(freightBoat2);
-            DockAdmin.FindEmptySlotAndAddBoat(freightBoat3);
-            DockAdmin.FindEmptySlotAndAddBoat(speedBoat1);
-            DockAdmin.FindEmptySlotAndAddBoat(rndBoat);
-
-            DockAdmin.ShowCurrenteDockStatus();
             //while (daysToSimulate > 0)
             //{
 

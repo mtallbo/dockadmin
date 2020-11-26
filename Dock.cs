@@ -4,47 +4,29 @@ using System.Text;
 
 namespace dockadmin
 {
-    public class Dock : IDock
+    public class Dock
     {
-        private Boat[] CurrentSlots = new Boat[63];
+        private Boat[] CurrentSlots = new Boat[24];
 
-        public void FindEmptySlotAndAddBoat(Boat boat)
+        public Boat FindEmptySlotAndAddBoat(Boat boat)
         {
-            int? emptySlotAvailable = FindEmptySlot();
-            if (emptySlotAvailable != null)
+            for (int slot = 0; slot < CurrentSlots.Length; slot++)
             {
-                bool boatWillFit = WillBoatFitSlot((int)emptySlotAvailable, boat.BoatSize);
-                if (boatWillFit)
+                if (CurrentSlots[slot] == null)
                 {
-                    AddBoatToSlot(boat, (int)emptySlotAvailable);
+                    bool boatWillFit = WillBoatFitSlot(slot, boat.BoatSize);
+                    if (boatWillFit)
+                    {
+                        AddBoatToSlot(boat, slot);
+                        return null;
+                    }
                 }
             }
+            return boat;
         }
-
-        public void ShowCurrentDockStatus()
+        public Boat[] GetAllBoatsInDock()
         {
-            for (int i = 0; i < CurrentSlots.Length; i++)
-            {
-                Console.WriteLine($"Slot{i}: {CurrentSlots[i]}");
-            }
-        }
-        public void RemoveBoatFromSlots(Boat boat)
-        {
-            throw new NotImplementedException();
-        }
-
-        private int? FindEmptySlot()
-        {
-            for (int slotIndex = 0; slotIndex < CurrentSlots.Length; slotIndex++)
-            {
-                if (CurrentSlots[slotIndex] == null)
-                {
-                    Console.WriteLine("Found empty slot @ : " + slotIndex);
-                    return slotIndex;
-                }
-            }
-            //Return null if no empty slots
-            return null;
+            return CurrentSlots;
         }
         private void AddBoatToSlot(Boat boat, int startSlotIndex)
         {
@@ -56,8 +38,12 @@ namespace dockadmin
 
         private bool WillBoatFitSlot(int startIndex, double sizeOfBoat)
         {
+            if (startIndex + sizeOfBoat > CurrentSlots.Length)
+            {
+                return false;
+            }
             int emptySlots = 0;
-            for (int i = startIndex; i < sizeOfBoat; i++)
+            for (int i = startIndex; i < startIndex + sizeOfBoat; i++)
             {
                 //Slot is occupied
                 if (CurrentSlots[i] != null)
@@ -73,18 +59,6 @@ namespace dockadmin
             }
             else
             {
-                return false;
-            }
-        }
-        private bool IsSlotAvailable(int slot)
-        {
-            if (CurrentSlots[slot] == null)
-            {
-                return true;
-            }
-            else
-            {
-                Console.WriteLine($"{slot} is not available");
                 return false;
             }
         }

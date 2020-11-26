@@ -7,7 +7,7 @@ namespace dockadmin
 {
     public class Utility
     {
-        Random _rnd;
+        private readonly Random _rnd;
         public Utility()
         {
             _rnd = new Random();
@@ -15,7 +15,7 @@ namespace dockadmin
         public Boat GenerateRandomBoat()
         {
             int TypeOfBoatToGenerate = _rnd.Next(1, 4);
-            if(TypeOfBoatToGenerate == 1)
+            if (TypeOfBoatToGenerate == 1)
             {
                 return CreateSpeedBoat();
             }
@@ -28,6 +28,27 @@ namespace dockadmin
                 return CreateFreightBoat();
             }
             return null;
+        }
+        public List<Boat> GenerateRandomBoat(int amountOfBoatsToGenerate)
+        {
+            List<Boat> randomBoats = new List<Boat>();
+            for (int i = 0; i < amountOfBoatsToGenerate; i++)
+            {
+                int TypeOfBoatToGenerate = _rnd.Next(1, 4);
+                if (TypeOfBoatToGenerate == 1)
+                {
+                    randomBoats.Add(CreateSpeedBoat());
+                }
+                if (TypeOfBoatToGenerate == 2)
+                {
+                    randomBoats.Add(CreateSailBoat());
+                }
+                if (TypeOfBoatToGenerate == 3)
+                {
+                    randomBoats.Add(CreateFreightBoat());
+                }
+            }
+            return randomBoats;
         }
         public SpeedBoat CreateSpeedBoat()
         {
@@ -69,7 +90,7 @@ namespace dockadmin
         }
         private string RandomSuffix()
         {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             return new string(Enumerable.Repeat(chars, 3)
               .Select(s => s[_rnd.Next(s.Length)]).ToArray());
         }
